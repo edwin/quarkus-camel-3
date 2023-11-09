@@ -23,7 +23,9 @@ public class HelloWorldApiRoute  extends RouteBuilder {
                 .get("/hello-world").produces("application/json")
                     .to("direct:hello-world")
                 .get("/hello-world-hashmap").produces("application/json")
-                    .to("direct:hello-world-hashmap");
+                    .to("direct:hello-world-hashmap")
+                .get("/google").produces("text/html")
+                    .to("direct:get-google");
 
         from("direct:hello-world")
                 .routeId("hello-world-api")
@@ -38,5 +40,13 @@ public class HelloWorldApiRoute  extends RouteBuilder {
                         put("hello", "world");
                     }});
                 }).marshal().json();
+
+        // doing a proxy call to externla website, in this case is google.com
+        from("direct:get-google")
+                .routeId("get-google-api")
+                    .log("start calling Google")
+                    .process( e -> e.getIn().getHeaders().clear())
+                .toD("https://google.com")
+                    .log("finish calling Google");
     }
 }
