@@ -41,11 +41,11 @@ public class HelloWorldApiRoute  extends RouteBuilder {
                     }});
                 }).marshal().json();
 
-        // doing a proxy call to externla website, in this case is google.com
+        // doing a proxy call to external website, in this case is google.com
         from("direct:get-google")
                 .routeId("get-google-api")
                     .log("start calling Google")
-                    .process( e -> e.getIn().getHeaders().clear())
+                    .process( e -> e.getIn().getHeaders().clear()) // clear headers first
                 .toD("https://google.com")
                     .log("finish calling Google");
     }

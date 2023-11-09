@@ -54,7 +54,7 @@ $ curl -kv http://localhost:8080/api/hello-world-hashmap
 {"hello":"world"}                    
 ```
 
-Test Rest API 3
+Test Rest API 3, where we do an external API call as an example.
 ```
 $  curl -kv http://localhost:8080/api/google
 *   Trying ::1:8080...
