@@ -2,6 +2,8 @@ package com.edw.route;
 
 import org.apache.camel.builder.RouteBuilder;
 
+import java.util.HashMap;
+
 /**
  * <pre>
  *     com.edw.route.HelloWorldApiRoute
@@ -19,11 +21,22 @@ public class HelloWorldApiRoute  extends RouteBuilder {
 
         rest("/api")
                 .get("/hello-world").produces("application/json")
-                .to("direct:hello-world");
+                    .to("direct:hello-world")
+                .get("/hello-world-hashmap").produces("application/json")
+                    .to("direct:hello-world-hashmap");
 
         from("direct:hello-world")
                 .routeId("hello-world-api")
                 .log("calling getHelloWorld")
                 .setBody(constant("{\"hello\":\"world\"}"));
+
+        from("direct:hello-world-hashmap")
+                .routeId("hello-world-hashmap-api")
+                .log("calling getHelloWorld-hashmap")
+                .process(exchange -> {
+                    exchange.getMessage().setBody(new HashMap(){{
+                        put("hello", "world");
+                    }});
+                }).marshal().json();
     }
 }
